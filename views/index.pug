@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  .row
+    .col.text-center.foundation
+      h2.title AT-TAQWA FOUNDATION
+      h5.title The Gateway to Islam
+
+  .row.justify-content-center.videos
+    .col-12.col-md-3.knowledge.text-center
+      h4 VIDEOS
+      hr
+      ul.list
+        each category in videoCategories
+          li: a(href=category.url) #{category.title}
+
+    .col-12.col-md-3.ask-sheesu.text-center
+      img.sheesu(src="images/sheesu.jpg")
+      h5.mt-2
+        a.ask-link(href="/attaqwa_foundation/ask_sheesu") Ask Sheesu
+      br
+      div
+        h5 Previous Questions and Answers
+        ul.list
+          li: a(href="#") Question
+          li: a(href="#") Question
+          li: a(href="#") Question
+          li: a(href="#") Question
+          li: a(href="#") Question
+
+    .col-12.col-md-6.live-video.text-center
+      h3 Live Video
+      .iframe-container
+        iframe(
+          src=liveVideoUrl
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        )

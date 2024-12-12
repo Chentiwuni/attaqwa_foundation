@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  .row
+    .col
+      h2.text-center Manage Questions
+      table.table.table-bordered.table-striped
+        thead
+          tr
+            th Question
+            th Answer
+            th Status
+            th Actions
+        tbody
+          each question in questions
+            tr
+              td= question.question
+              td= question.answer || "Not answered yet"
+              td= question.isAnswered ? "Answered" : "Pending"
+              td
+                if !question.isAnswered
+                  form(action="/attaqwa_foundation/answer_question" method="POST")
+                    input(type="hidden" name="questionId" value=question._id)
+                    textarea.form-control(name="answer" rows="2" required)
+                    button.btn.btn-success.mt-2(type="submit") Submit Answer

@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-8
+      h2.text-center Ask Sheesu
+      if error
+        .alert.alert-danger= error
+      form(action="/attaqwa_foundation/ask_sheesu" method="POST")
+        .form-group
+          label(for="question") Your Question
+          textarea.form-control(name="question" rows="4" required)
+        button.btn.btn-primary.mt-3(type="submit") Submit Question

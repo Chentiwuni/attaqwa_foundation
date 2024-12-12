@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-6
+      h2.text-center.mt-3 Add Video Category
+      hr
+      form(method="POST" action="/attaqwa_foundation/add_video_category")
+        .form-group
+          label(for="title") Category Title
+          input#title.form-control(type="text" name="title" required placeholder="Enter category title")
+        button.btn.btn-primary.mt-3(type="submit") Add Category

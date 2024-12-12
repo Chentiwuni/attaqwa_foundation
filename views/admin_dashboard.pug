@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  h1.text-center.mt-4 Admin Dashboard
+  .row
+    .col-md-3
+      .card.mb-4.shadow-sm.border.border-primary
+        .card-body
+          ul.list-group.list-group-flush
+            li.list-group-item
+              a(href="/attaqwa_foundation/signup/admin", class='nav-link') Admin Sign Up
+    .col-md-3
+      .card.mb-4.shadow-sm.border.border-primary
+        .card-body
+          ul.list-group.list-group-flush
+            li.list-group-item
+              a(href='/admin/delete', class='nav-link') Delete Admin
+    .col-md-3
+      .card.mb-4.shadow-sm.border.border-primary
+        .card-body
+          ul.list-group.list-group-flush
+            li.list-group-item
+              a(href='/attaqwa_foundation/add_video_category', class='nav-link') Add Video Category
+    .col-md-3
+      .card.mb-4.shadow-sm.border.border-primary
+        .card-body
+          ul.list-group.list-group-flush
+            li.list-group-item
+              a(href='/attaqwa_foundation/manage_questions', class='nav-link') Manage Questions

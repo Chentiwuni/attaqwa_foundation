@@ -41,7 +41,7 @@ exports.postUserSignIn = asyncHandler(async (req, res) => {
     const user = await User.findOne({ username });
   
     if (user && (await bcrypt.compare(password, user.password))) {
-      req.session.userId = user._id;
+      req.session.user = user._id;
       res.redirect('/attaqwa_foundation/');
     } else {
       res.status(401).send('Invalid username or password');
@@ -54,7 +54,7 @@ exports.postAdminSignIn = asyncHandler(async (req, res) => {
   const admin = await Admin.findOne({ username });
 
   if (admin && (await bcrypt.compare(password, admin.password))) {
-    req.session.adminId = admin._id;
+    req.session.admin = admin._id;
     res.redirect('/attaqwa_foundation/dashboard'); // Redirect to admin dashboard
   } else {
     res.status(401).send('Invalid admin credentials');
@@ -63,8 +63,8 @@ exports.postAdminSignIn = asyncHandler(async (req, res) => {
 
 exports.getAdminDashboard = (req, res) => {
     // Check if admin is logged in
-    if (!req.session.adminId) {
-        return res.redirect('/signin/admin');
+    if (!req.session.admin) {
+        return res.redirect('/attaqwa_foundation/signin/user');
     }
     res.render('admin_dashboard', { title: 'Admin Dashboard' });
 };

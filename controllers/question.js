@@ -34,3 +34,18 @@ exports.postAnswerQuestion = asyncHandler(async (req, res) => {
   });
   res.redirect("/attaqwa_foundation/manage_questions");
 });
+
+// Controller function to get a specific question by ID
+exports.getQuestionDetails = asyncHandler(async (req, res) => {
+    const questionId = req.params.id;
+  
+    // Find the question by ID
+    const question = await Question.findById(questionId);
+  
+    if (!question) {
+      return res.status(404).render('error', { message: "Question not found." });
+    }
+  
+    // Render the question details page
+    res.render('questionDetail', { question });
+  });

@@ -1,63 +1,66 @@
 require('dotenv').config();
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const session = require('express-session');
+const MongoStore = require('connect-mongo'); // Persistent session store
+const mongoose = require('mongoose');
 
-var attaqwaRouter = require('./routes/attaqwa_foundation');
-var usersRouter = require('./routes/users');
+const attaqwaRouter = require("./routes/attaqwa_foundation");
+const usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
 
 // Set up mongoose connection
-const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb+srv://chienntiwuni:ismaaeel8952@cluster0.jxwr8xd.mongodb.net/Attaqwa_Foundation?retryWrites=true&w=majority&appName=Cluster0";
+const mongoDB = process.env.MONGODB_URI || "your-mongo-uri-here";
 
-main().catch((err) => console.log(err));
-async function main() {
-  await mongoose.connect(mongoDB);
-}
+mongoose.connect(mongoDB,)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-
-// view engine setup
+// View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+// Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/attaqwa_foundation', express.static(path.join(__dirname, 'public')));
 
-
-require('dotenv').config(); // Ensure dotenv is installed and required
-
+// Session middleware with MongoDB store
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
+  secret: process.env.SESSION_SECRET || 'your-default-secret',
+  resave: false,
+  saveUninitialized: false, // Only save sessions when modified
+  store: MongoStore.create({
+    mongoUrl: mongoDB,
+    collectionName: 'sessions',
+  }),
+  cookie: {
+    secure: false, // Set to `true` if using HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  },
 }));
 
-
+// Routes
 app.use('/attaqwa_foundation', attaqwaRouter);
 app.use('/users', usersRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
+// Error handling
+app.use((req, res, next) => {
   next(createError(404));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });

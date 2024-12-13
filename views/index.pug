@@ -22,12 +22,9 @@ block content
       div
         h5 Previous Questions and Answers
         ul.list
-          li: a(href="#") Question
-          li: a(href="#") Question
-          li: a(href="#") Question
-          li: a(href="#") Question
-          li: a(href="#") Question
-
+          each question in questions
+            li: a(href=`/attaqwa_foundation/question/${question._id}`) #{question.question} <!-- Link to the question's answer -->
+          
     .col-12.col-md-6.live-video.text-center
       h3 Live Video
       .iframe-container

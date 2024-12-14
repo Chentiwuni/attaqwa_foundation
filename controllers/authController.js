@@ -14,13 +14,60 @@ exports.getUserSignUp = (req, res) => {
     res.render('signup_user', { title: 'User Sign Up' });
   };
 
-// POST: Handle User Sign-Up Form Submission
+// POST: Handle User Sign-Up
 exports.postUserSignUp = asyncHandler(async (req, res) => {
-    const { username, email, password } = req.body;
-    const user = new User({ username, email, password });
-    await user.save();
-    res.redirect('/signin'); // Redirect to sign-in after successful sign-up
+  const { username, phoneNumber, password, confirmPassword } = req.body;
+
+  // Check if username, phone number, password, or confirm password are missing
+  if (!username || !phoneNumber || !password || !confirmPassword) {
+    return res.status(400).send('All fields are required');
+  }
+
+  // Validate phone number pattern
+  const phonePattern = /^(\+233|0)[1-9]{1}[0-9]{8}$/;
+  if (!phonePattern.test(phoneNumber)) {
+    return res.status(400).send('Invalid phone number');
+  }
+
+  // Ensure passwords match
+  if (password !== confirmPassword) {
+    return res.status(400).send('Passwords do not match');
+  }
+
+  // Check if phone number is already in use
+  const existingPhoneNumber = await User.findOne({ phoneNumber });
+  if (existingPhoneNumber) {
+    return res.status(400).send('Phone number is already registered');
+  }
+
+  // Check if username is already taken
+  const existingUser = await User.findOne({ username });
+  if (existingUser) {
+    return res.status(400).send('Username is already taken');
+  }
+
+  // Hash the password before saving
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Create and save the new user with the username, phone number, and hashed password
+  const newUser = new User({
+    username: username,
+    phoneNumber: phoneNumber,
+    password: hashedPassword
   });
+
+  await newUser.save();
+
+  res.redirect('/attaqwa_foundation/success');
+});
+
+//Success sign up
+exports.getSuccess = (req, res) => {
+  res.render('success', {
+    title: 'Signup Successful'
+  });
+};
+
 
   // GET: Display Admin Sign-Up Page
 exports.getAdminSignUp = (req, res) => {

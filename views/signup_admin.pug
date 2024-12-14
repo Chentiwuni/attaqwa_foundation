@@ -1,17 +1,23 @@
 extends layout
 
 block content
-  h1.text-center= title
+  h1.text-center Admin Sign Up
 
   .container.mt-4
     .row
       .col-md-6.offset-md-3
-        h3.text-center Sign Up as an Admin
-        form(action="/attaqwa_foundation/signup/admin" method="POST")
+        form(method="POST" action="/attaqwa_foundation/signup/admin")
+          // Check if errors array has any content
+          if errors.length
+            each error in errors
+              .alert.alert-danger= error.msg
           .mb-3
             label(for="username") Username
-            input.form-control(type="text" name="username" required)
+            input.form-control(type="text" name="username" value=(oldInput.username || ''))
           .mb-3
             label(for="password") Password
-            input.form-control(type="password" name="password" required)
-          button.btn.btn-danger(type="submit") Sign Up
+            input.form-control(type="password" name="password")
+          .mb-3
+            label(for="confirmPassword") Confirm Password
+            input.form-control(type="password" name="confirmPassword")
+          button.btn.btn-primary(type="submit") Sign Up

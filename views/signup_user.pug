@@ -6,23 +6,26 @@ block content
   .container.mt-4
     .row
       .col-md-6.offset-md-3
-        h3.text-center Sign Up as a User
         form(method="POST" action="/attaqwa_foundation/signup")
+          // Display error messages
+          if errors.length
+            each error in errors
+              .alert.alert-danger= error.msg
+
           .mb-3
             label(for="username") Username
-            input.form-control(type="text" name="username" id="username" required placeholder="Enter your username")
+            input.form-control(type="text" name="username" value=(oldInput.username || ''))
 
           .mb-3
             label(for="phoneNumber") Phone Number
-            input.form-control(type="text" name="phoneNumber" id="phoneNumber" required placeholder="Enter your phone number" 
-                pattern="^(\+233|0)[1-9]{1}[0-9]{8}$" maxlength="13")
+            input.form-control(type="text" name="phoneNumber" value=(oldInput.phoneNumber || ''))
 
           .mb-3
             label(for="password") Password
-            input.form-control(type="password" name="password" id="password" required placeholder="Enter your password")
+            input.form-control(type="password" name="password")
 
           .mb-3
             label(for="confirmPassword") Confirm Password
-            input.form-control(type="password" name="confirmPassword" id="confirmPassword" required placeholder="Confirm your password")
-          
+            input.form-control(type="password" name="confirmPassword")
+
           button.btn.btn-primary(type="submit") Sign Up

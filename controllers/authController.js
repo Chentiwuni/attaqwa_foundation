@@ -84,28 +84,52 @@ exports.postAdminSignUp = asyncHandler(async (req, res) => {
 
 // POST: Handle User Sign-In
 exports.postUserSignIn = asyncHandler(async (req, res) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username });
-  
-    if (user && (await bcrypt.compare(password, user.password))) {
-      req.session.user = user._id;
-      res.redirect('/attaqwa_foundation/');
-    } else {
-      res.status(401).send('Invalid username or password');
-    }
-  });
+  const { username, password } = req.body;
+
+  // Check if username or password is missing
+  if (!username || !password) {
+      return res.status(401).render('signin', { title: 'Sign In', userError: 'Username and password are required.' });
+  }
+
+  // Look for the user in the database
+  const user = await User.findOne({ username });
+  if (!user) {
+      return res.status(401).render('signin', { title: 'Sign In', userError: 'Invalid username or password.' });
+  }
+
+  // Compare passwords
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+      return res.status(401).render('signin', { title: 'Sign In', userError: 'Invalid username or password.' });
+  }
+
+  // Redirect to user dashboard
+  res.redirect('/attaqwa_foundation/');
+});
 
 // POST: Handle Admin Sign-In
 exports.postAdminSignIn = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
-  const admin = await Admin.findOne({ username });
+    const { username, password } = req.body;
 
-  if (admin && (await bcrypt.compare(password, admin.password))) {
-    req.session.admin = admin._id;
-    res.redirect('/attaqwa_foundation/dashboard'); // Redirect to admin dashboard
-  } else {
-    res.status(401).send('Invalid admin credentials');
-  }
+    // Check if username or password is missing
+    if (!username || !password) {
+        return res.status(401).render('signin', { title: 'Sign In', adminError: 'Username and password are required.' });
+    }
+
+    // Look for the admin in the database
+    const admin = await Admin.findOne({ username });
+    if (!admin) {
+        return res.status(401).render('signin', { title: 'Sign In', adminError: 'Invalid username or password.' });
+    }
+
+    // Compare passwords
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+        return res.status(401).render('signin', { title: 'Sign In', adminError: 'Invalid username or password.' });
+    }
+
+    // Redirect to admin dashboard
+    res.redirect('/attaqwa_foundation/dashboard');
 });
 
 exports.getAdminDashboard = (req, res) => {

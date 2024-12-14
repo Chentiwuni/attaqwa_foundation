@@ -7,6 +7,12 @@ block content
     .row
       .col-md-6.offset-md-3
         h3.text-center Sign In as a User
+
+        if userError
+          .alert.alert-danger
+            i.fa.fa-exclamation-circle(aria-hidden="true")
+            | #{userError}
+
         form(method="POST" action="/attaqwa_foundation/signin/user")
           .mb-3
             label(for="username") Username
@@ -17,7 +23,7 @@ block content
           button.btn.btn-primary(type="submit") Sign In 
 
     .text-center.mt-4 
-      P Don't have an acount? 
+      p Don't have an account? 
         a(href="/attaqwa_foundation/signup") Sign up    
 
     hr.mt-5
@@ -25,6 +31,12 @@ block content
     .row
       .col-md-6.offset-md-3
         h3.text-center Sign In as an Admin
+
+        if adminError
+          .alert.alert-danger
+            i.fa.fa-exclamation-circle(aria-hidden="true")
+            | #{adminError}
+
         form(method="POST" action="/attaqwa_foundation/signin/admin")
           .mb-3
             label(for="username") Username

@@ -28,6 +28,8 @@ router.get('/signup', authController.getUserSignUp);
 
 router.post('/signup', authController.postUserSignUp);
 
+router.get('/success', authController.getSuccess);
+
 // Admin Sign-Up Routes
 router.get('/signup/admin',isAdmin, authController.getAdminSignUp); 
 

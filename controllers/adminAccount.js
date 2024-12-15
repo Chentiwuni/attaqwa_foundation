@@ -57,27 +57,51 @@ exports.getAdminSignUpSuccess = (req, res) => {
 
 // POST: Handle Admin Sign-In
 exports.postAdminSignIn = asyncHandler(async (req, res) => {
-    const { username, password } = req.body;
+  const { username, password } = req.body;
 
-    // Check if username or password is missing
-    if (!username || !password) {
-        return res.status(401).render('signin', { title: 'Sign In', adminError: 'Username and password are required.' });
-    }
+  // Check if username or password is missing
+  if (!username || !password) {
+      return res.status(401).render('signin', { 
+          title: 'Sign In', 
+          adminError: 'Username and password are required.', 
+          oldInput: { username } 
+      });
+  }
 
-    // Look for the admin in the database
-    const admin = await Admin.findOne({ username });
-    if (!admin) {
-        return res.status(401).render('signin', { title: 'Sign In', adminError: 'Invalid username or password.' });
-    }
+  // Look for the admin in the database
+  const admin = await Admin.findOne({ username });
+  if (!admin) {
+      return res.status(401).render('signin', { 
+          title: 'Sign In', 
+          adminError: 'Invalid username or password.', 
+          oldInput: { username } 
+      });
+  }
 
-    // Compare passwords
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) {
-        return res.status(401).render('signin', { title: 'Sign In', adminError: 'Invalid username or password.' });
-    }
+  // Compare passwords
+  const isMatch = await bcrypt.compare(password, admin.password);
+  if (!isMatch) {
+      return res.status(401).render('signin', { 
+          title: 'Sign In', 
+          adminError: 'Invalid username or password.', 
+          oldInput: { username } 
+      });
+  }
 
-    // Redirect to admin dashboard
-    res.redirect('/attaqwa_foundation/dashboard');
+  // Set up session for admin
+  req.session.isLoggedIn = true; 
+  req.session.admin = {
+      username: admin.username,
+  };
+
+  // Save session and redirect
+  req.session.save((err) => {
+      if (err) {
+          console.error('Session save error:', err);
+          return res.status(500).send('An error occurred. Please try again.');
+      }
+      res.redirect('/attaqwa_foundation/dashboard');
+  });
 });
 
 // GET: Render Sign In Page

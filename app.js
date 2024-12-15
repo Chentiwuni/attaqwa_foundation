@@ -48,6 +48,14 @@ app.use(session({
   },
 }));
 
+// Add res.locals middleware after session handling
+app.use((req, res, next) => {
+  res.locals.isLoggedIn = req.session.isLoggedIn || false;
+  res.locals.admin = req.session.admin || null;
+  next();
+});
+
+
 // Routes
 app.use('/attaqwa_foundation', attaqwaRouter);
 app.use('/users', usersRouter);

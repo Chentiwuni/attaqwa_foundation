@@ -95,3 +95,14 @@ footer a:hover {
 .ask-link {
   text-decoration: none;
 }
+
+.nav-link i.fa-user-circle {
+  margin-right: 5px;
+  font-size: 1.2em;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+}
+

@@ -3,7 +3,7 @@ html(lang="en")
   head
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width, initial-scale=1")
-    title Home page
+    title= title || 'Home Page'
 
     link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css")
     link(rel="stylesheet" href="/attaqwa_foundation/stylesheets/layout.css")
@@ -37,8 +37,25 @@ html(lang="en")
                 a.nav-link.active(aria-current="page" href="http://localhost:3000/attaqwa_foundation") Home
               li.nav-item
                 a.nav-link(href="#") Donate
-              li.nav-item
-                a.nav-link(href="http://localhost:3000/attaqwa_foundation/signin") Sign In
+              // Show Admin Links or User Links Dynamically
+              if isLoggedIn && admin
+                li.nav-item
+                  a.nav-link(href="http://localhost:3000/attaqwa_foundation/dashboard") Dashboard
+                li.nav-item.dropdown
+                  a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false")
+                    i(class="fas fa-user-circle") 
+                    span= admin.username ? admin.username[0].toUpperCase() : ''
+                  ul.dropdown-menu
+                    li
+                      a.dropdown-item(href="http://localhost:3000/attaqwa_foundation/signout") Sign Out
+              else if isLoggedIn
+                li.nav-item
+                  a.nav-link(href="http://localhost:3000/attaqwa_foundation/profile") Profile
+                li.nav-item
+                  a.nav-link(href="http://localhost:3000/attaqwa_foundation/signout") Sign Out
+              else
+                li.nav-item
+                  a.nav-link(href="http://localhost:3000/attaqwa_foundation/signin") Sign In
             form.d-flex(role="search")
               input.form-control.me-2(type="search" placeholder="Search" aria-label="Search")
               button.btn.btn-outline-success(type="submit") Search

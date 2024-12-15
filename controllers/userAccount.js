@@ -66,28 +66,44 @@ exports.getSignInPage = asyncHandler(async (req, res) => {
     res.render('signin', { title: 'Sign In' });
   });
 
-  // POST: Handle User Sign-In
+// POST: Handle User Sign-In
 exports.postUserSignIn = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
-  
-    // Check if username or password is missing
+
+    // Validate input
     if (!username || !password) {
-        return res.status(401).render('signin', { title: 'Sign In', userError: 'Username and password are required.' });
+        return res.status(401).render('signin', { 
+            title: 'Sign In', 
+            userError: 'Username and password are required.' 
+        });
     }
-  
-    // Look for the user in the database
+
+    // Find the user in the database
     const user = await User.findOne({ username });
     if (!user) {
-        return res.status(401).render('signin', { title: 'Sign In', userError: 'Invalid username or password.' });
+        return res.status(401).render('signin', { 
+            title: 'Sign In', 
+            userError: 'Invalid username or password.' 
+        });
     }
-  
+
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-        return res.status(401).render('signin', { title: 'Sign In', userError: 'Invalid username or password.' });
+        return res.status(401).render('signin', { 
+            title: 'Sign In', 
+            userError: 'Invalid username or password.' 
+        });
     }
-  
-    // Redirect to user dashboard
-    res.redirect('/attaqwa_foundation/');
-  });
+
+    // Save user session data
+    req.session.isLoggedIn = true;
+    req.session.user = { 
+        id: user._id, 
+        username: user.username 
+    };
+
+    // Redirect to home
+    res.redirect('/attaqwa_foundation');
+});
   

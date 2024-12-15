@@ -20,7 +20,7 @@ html(lang="en")
       // Navbar Section
       nav.navbar.navbar-expand-lg.bg-body-tertiary
         .container-fluid
-          a.navbar-brand(href="http://localhost:3000/attaqwa_foundation")
+          a.navbar-brand(href="/attaqwa_foundation")
             img.navbar-logo(src="/attaqwa_foundation/images/attaqwa.jpg")
           button.navbar-toggler(
             type="button" 
@@ -34,28 +34,41 @@ html(lang="en")
           .collapse.navbar-collapse#navbarSupportedContent
             ul.navbar-nav.me-auto.mb-2.mb-lg-0
               li.nav-item
-                a.nav-link.active(aria-current="page" href="http://localhost:3000/attaqwa_foundation") Home
+                a.nav-link.active(aria-current="page" href="/attaqwa_foundation") Home
               li.nav-item
                 a.nav-link(href="#") Donate
-              // Show Admin Links or User Links Dynamically
+
+              // Show Admin or User Links Dynamically
               if isLoggedIn && admin
                 li.nav-item
-                  a.nav-link(href="http://localhost:3000/attaqwa_foundation/dashboard") Dashboard
+                  a.nav-link(href="/attaqwa_foundation/dashboard") Dashboard
                 li.nav-item.dropdown
                   a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false")
                     i(class="fas fa-user-circle") 
-                    span= admin.username ? admin.username[0].toUpperCase() : ''
+                    span= admin.username ? admin.username[0].toUpperCase() + admin.username.slice(1).toLowerCase() : ''
                   ul.dropdown-menu
                     li
-                      a.dropdown-item(href="http://localhost:3000/attaqwa_foundation/signout") Sign Out
-              else if isLoggedIn
+                      a.dropdown-item(href="/attaqwa_foundation/signout") Sign Out
+
+              else if isLoggedIn && user
                 li.nav-item
-                  a.nav-link(href="http://localhost:3000/attaqwa_foundation/profile") Profile
+                  a.nav-link(href="/attaqwa_foundation/messages") Messages
                 li.nav-item
-                  a.nav-link(href="http://localhost:3000/attaqwa_foundation/signout") Sign Out
+                  a.nav-link(href="/attaqwa_foundation/profile") Profile
+                li.nav-item.dropdown
+                  a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false")
+                    i(class="fas fa-user-circle text-primary") 
+                    span= user.username ? user.username[0].toUpperCase() + user.username.slice(1).toLowerCase() : ''
+                  ul.dropdown-menu
+                    li
+                      a.dropdown-item(href="/attaqwa_foundation/signout") Sign Out
+
               else
                 li.nav-item
-                  a.nav-link(href="http://localhost:3000/attaqwa_foundation/signin") Sign In
+                  a.nav-link(href="/attaqwa_foundation/signin") Sign In
+                li.nav-item
+                  a.nav-link(href="/attaqwa_foundation/signup") Sign Up
+
             form.d-flex(role="search")
               input.form-control.me-2(type="search" placeholder="Search" aria-label="Search")
               button.btn.btn-outline-success(type="submit") Search

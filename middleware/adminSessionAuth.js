@@ -6,7 +6,7 @@ const isAdmin = (req, res, next) => {
   }
 
   // If not authenticated, redirect to the sign-in page
-  res.redirect('/attaqwa_foundation/signin?error=unauthorized');
+  res.redirect('/attaqwa_foundation/signin');
 };
 
   module.exports = isAdmin;

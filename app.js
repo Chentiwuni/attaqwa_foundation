@@ -48,10 +48,11 @@ app.use(session({
   },
 }));
 
-// Add res.locals middleware after session handling
+// Middleware to set local variables to handle dynamic navigational layout
 app.use((req, res, next) => {
   res.locals.isLoggedIn = req.session.isLoggedIn || false;
   res.locals.admin = req.session.admin || null;
+  res.locals.user = req.session.user || null;  // Set user here if regular user is logged in
   next();
 });
 

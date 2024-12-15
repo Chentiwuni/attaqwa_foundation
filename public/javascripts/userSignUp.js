@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         phone = '+233' + phone.substring(1);
         phoneInput.value = phone;
       } else if (!phone.startsWith('+233') && phone.length > 0) {
-        phoneInput.value = '+233' + phone;  // Automatically add prefix if it doesn't exist
+        phoneInput.value = '+233' + phone; 
       }
     });
   });

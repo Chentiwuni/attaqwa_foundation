@@ -17,7 +17,7 @@ exports.validateUserSignUp = [
   check('password')
     .trim()
     .notEmpty().withMessage('Password is required')
-    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+    .isLength({ min: 6, max: 20 }).withMessage('Password must be between 6 and 20 characters long'),
 
   // Validate confirm password and ensure it matches the password
   check('confirmPassword')

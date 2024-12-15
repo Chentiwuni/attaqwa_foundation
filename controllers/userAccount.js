@@ -3,43 +3,58 @@ const asyncHandler = require('express-async-handler');
 const User = require('../models/users');
 const bcrypt = require('bcryptjs');
   
-  // GET: Display User Sign-Up Page
-  exports.getUserSignUp = (req, res) => {
-      res.render('signup_user', { title: 'User Sign Up' });
-    };
-  
-// POST: Handle User Sign-Up
-exports.postUserSignUp = asyncHandler(async (req, res) => {
-    const errors = validationResult(req);
-  
-    // Check for validation errors
-    if (!errors.isEmpty()) {
-      // Render the sign-up form again with errors and old input data
-      return res.status(400).render('signup_user', { 
-        title: 'User Sign Up', 
-        errors: errors.array(),
-        oldInput: req.body 
-      });
-    }
-  
-    const { username, phoneNumber, password } = req.body;
-  
-    // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
-  
-    // Create and save the new user with the username, phone number, and hashed password
-    const newUser = new User({
-      username: username,
-      phoneNumber: phoneNumber,
-      password: hashedPassword,
+exports.getUserSignUp = (req, res) => {
+    res.render('signup_user', {
+      title: 'User Sign Up',
+      errors: [],
+      oldInput: { username: '', phoneNumber: '' },
     });
-  
-    await newUser.save();
-  
-    res.redirect('/attaqwa_foundation/user_signup_success');
-  });
+  };
     
-  //Success sign up for user
+    exports.postUserSignUp = asyncHandler(async (req, res) => {
+        const { username, phoneNumber, password } = req.body;
+      
+        // Validate request fields
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).render('signup_user', {
+            title: 'User Sign Up',
+            errors: errors.array(),
+            oldInput: { username: username || '', phoneNumber: phoneNumber || '' },
+          });
+        }
+      
+        // Check for existing username or phone number
+        const existingPhoneNumber = await User.findOne({ phoneNumber });
+        const existingUser = await User.findOne({ username });
+      
+        if (existingPhoneNumber || existingUser) {
+          return res.status(400).render('signup_user', {
+            title: 'User Sign Up',
+            errors: [
+              existingPhoneNumber
+                ? { msg: 'Phone number is already registered' }
+                : { msg: 'Username is already taken' },
+            ],
+            oldInput: { username, phoneNumber },
+          });
+        }
+      
+        // Hash the password before saving
+        const hashedPassword = await bcrypt.hash(password, 10);
+      
+        // Save the new user
+        const newUser = new User({
+          username,
+          phoneNumber,
+          password: hashedPassword,
+        });
+        await newUser.save();
+      
+        res.redirect('/attaqwa_foundation/user_signup_success');
+      });
+
+        //Success sign up for user
   exports.getUserSignUpSuccess = (req, res) => {
     res.render('userSignUpSuccess', {
       title: 'Signup Successful'

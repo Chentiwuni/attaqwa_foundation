@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator'); // Import express-validator
 const asyncHandler = require('express-async-handler');
+const Message = require("../models/messages");
 const User = require('../models/users');
 const bcrypt = require('bcryptjs');
   
@@ -107,3 +108,13 @@ exports.postUserSignIn = asyncHandler(async (req, res) => {
     res.redirect('/attaqwa_foundation');
 });
   
+
+exports.getUserMessages = asyncHandler(async (req, res) => {
+  const userId = req.session.user?.id; // Retrieve logged-in user's ID
+  const messages = await Message.find({ userId }).sort({ createdAt: -1 });
+
+  res.render('userMessages', {
+    title: 'Your Messages',
+    messages
+  });
+});

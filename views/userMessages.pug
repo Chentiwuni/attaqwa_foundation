@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+  head
+    title= title
+  body
+    h1 Your Messages
+    if messages.length > 0
+      each message in messages
+        .message-box
+          h3= `Question: ${message.question}`
+          p= `Answer: ${message.answer}`
+          small= `Received: ${new Date(message.createdAt).toLocaleString()}`
+    else
+      p No messages yet.

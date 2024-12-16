@@ -34,6 +34,8 @@ router.post('/signup',validateUserSignUp, userAccount.postUserSignUp);
 
 router.get('/user_signup_success', userAccount.getUserSignUpSuccess);
 
+router.get('/user_messages', userAccount.getUserMessages);
+
 router.get('/admin_signup_success', adminAccount.getAdminSignUpSuccess);
 
 // Admin Sign-Up Routes

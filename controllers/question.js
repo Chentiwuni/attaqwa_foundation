@@ -24,8 +24,13 @@ exports.postAskQuestion = asyncHandler(async (req, res) => {
 
 // GET: Display all questions (Admin view)
 exports.getQuestions = asyncHandler(async (req, res) => {
-  const questions = await Question.find().sort({ createdAt: -1 });
-  res.render("manageQuestions", { title: "Manage Questions", questions });
+  const questions = await Question.find()
+    .populate('userId', 'username phoneNumber') // Fetch only username and phone fields
+    .sort({ createdAt: -1 });
+  res.render("manageQuestions", { 
+    title: "Manage Questions", 
+    questions 
+  });
 });
 
 // POST: Admin submits an answer to a question

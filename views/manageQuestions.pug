@@ -7,6 +7,8 @@ block content
       table.table.table-bordered.table-striped
         thead
           tr
+            th Name
+            th Phone
             th Question
             th Answer
             th Status
@@ -14,6 +16,8 @@ block content
         tbody
           each question in questions
             tr
+              td= question.userId.username || "Anonymous"
+              td= question.userId.phoneNumber || "N/A"
               td= question.question
               td= question.answer || "Not answered yet"
               td= question.isAnswered ? "Answered" : "Pending"

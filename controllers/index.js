@@ -8,12 +8,12 @@ exports.index = asyncHandler(async (req, res) => {
   // Fetch video categories from the database
   const videoCategories = await VideoCategory.find();
 
-  // Fetch the latest 5 questions from the database
-  const questions = await Question.find().sort({ createdAt: -1 }).limit(5);
+  // Fetch the latest 5 answered questions from the database
+  const questions = await Question.find({ isAnswered: true }).sort({ createdAt: -1 }).limit(5);
 
   res.render('index', { 
     liveVideoUrl, 
     videoCategories,
-    questions // Pass questions to the view
+    questions // Pass answered questions to the view
   });
 });

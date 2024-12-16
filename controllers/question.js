@@ -69,3 +69,13 @@ exports.getQuestionDetails = asyncHandler(async (req, res) => {
     // Render the question details page
     res.render('questionDetail', { question });
   });
+
+  // GET: Display All Answered Questions
+exports.getAllQuestions = asyncHandler(async (req, res) => {
+  const questions = await Question.find({ isAnswered: true }).sort({ createdAt: -1 });
+
+  res.render('allQuestions', { 
+    title: "All Questions",
+    questions
+  });
+});

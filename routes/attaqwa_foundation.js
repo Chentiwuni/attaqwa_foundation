@@ -6,6 +6,7 @@ const questionController = require("../controllers/question");
 const sessionSignOut = require("../controllers/signOut");
 const { validateUserSignUp } = require("../middleware/userValidation");
 const { validateAdminSignUp } = require("../middleware/adminValidation");
+const getAllQuestion = require("../controllers/question");
 const isAuthenticated = require("../middleware/userSessionAuth");
 const isAdmin = require("../middleware/adminSessionAuth");
 const express = require("express");
@@ -56,6 +57,9 @@ router.post("/ask_sheesu",isAuthenticated, questionController.postAskQuestion);
 // Admin routes
 router.get("/manage_questions",isAdmin, questionController.getQuestions);
 router.post("/answer_question",isAdmin, questionController.postAnswerQuestion);
+
+// Route to get question details by ID
+router.get('/all_questions', questionController.getAllQuestions);
 
 // Route to get question details by ID
 router.get('/question/:id', questionController.getQuestionDetails);

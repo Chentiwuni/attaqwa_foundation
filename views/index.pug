@@ -17,14 +17,15 @@ block content
     .col-12.col-md-3.ask-sheesu.text-center
       img.sheesu(src="images/sheesu.jpg")
       h5.mt-2
-        a.ask-link(href="/attaqwa_foundation/ask_sheesu") Ask Sheesu
+        a.ask-link.btn.btn-primary(href="/attaqwa_foundation/ask_sheesu") Ask Sheesu
       br
       div
-        h5 Previous Questions and Answers
+        h5 Recent Questions and Answers
         ul.list
           each question in questions
             li: a(href=`/attaqwa_foundation/question/${question._id}`) #{question.question} <!-- Link to the question's answer -->
-          
+        a.btn.btn-primary.mt-2(href="/attaqwa_foundation/all_questions") View More Questions <!-- New "More Questions" link -->
+
     .col-12.col-md-6.live-video.text-center
       h3 Live Video
       .iframe-container

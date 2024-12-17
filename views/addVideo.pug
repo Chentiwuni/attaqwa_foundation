@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h2.text-center Add Video
+
+  // Flash Messages
+  if success && success.length > 0
+    .alert.alert-success.text-center #{success[0]}
+
+  if error && error.length > 0
+    .alert.alert-danger.text-center #{error[0]}
+
+  .row.justify-content-center
+    .col-md-6
+      form(action="/attaqwa_foundation/add_video", method="POST")
+        .mb-3
+          label(for="category") Video Category
+          select.form-select(name="category", required)
+            option(value="") -- Select a Category --
+            each category in videoCategories
+              option(value=category._id)= category.title
+
+        .mb-3
+          label(for="youtubeUrl") YouTube Video URL
+          input.form-control(type="url", name="youtubeUrl", placeholder="https://youtu.be/YourVideoID", required)
+
+        button.btn.btn-primary(type="submit") Add Video

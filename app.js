@@ -7,6 +7,7 @@ const logger = require('morgan');
 const session = require('express-session');
 const MongoStore = require('connect-mongo'); // Persistent session store
 const mongoose = require('mongoose');
+const flash = require('express-flash'); // Import express-flash
 
 const attaqwaRouter = require("./routes/attaqwa_foundation");
 const usersRouter = require('./routes/users');
@@ -48,14 +49,18 @@ app.use(session({
   },
 }));
 
+// Initialize flash middleware
+app.use(flash());
+
 // Middleware to set local variables to handle dynamic navigational layout
 app.use((req, res, next) => {
   res.locals.isLoggedIn = req.session.isLoggedIn || false;
   res.locals.admin = req.session.admin || null;
   res.locals.user = req.session.user || null;  // Set user here if regular user is logged in
+  res.locals.success = req.flash('success'); // Add flash success messages
+  res.locals.error = req.flash('error');     // Add flash error messages
   next();
 });
-
 
 // Routes
 app.use('/attaqwa_foundation', attaqwaRouter);

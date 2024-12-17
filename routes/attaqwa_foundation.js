@@ -7,6 +7,8 @@ const sessionSignOut = require("../controllers/signOut");
 const { validateUserSignUp } = require("../middleware/userValidation");
 const { validateAdminSignUp } = require("../middleware/adminValidation");
 const getAllQuestion = require("../controllers/question");
+const addVideoController = require("../controllers/addVideo");
+const videoListController = require("../controllers/videoList");
 const isAuthenticated = require("../middleware/userSessionAuth");
 const isAdmin = require("../middleware/adminSessionAuth");
 const express = require("express");
@@ -18,6 +20,15 @@ router.get("/", index_controller.index);
 router.get('/add_video_category',isAdmin, videoCategoryController.getAddCategory);
 
 router.post('/add_video_category',isAdmin, videoCategoryController.postAddCategory);
+
+router.get('/video_categories/:id', videoListController.getVideoList);
+
+// GET: Render add video form
+router.get('/add_video', addVideoController.getAddVideo);
+
+// POST: Handle video form submission
+router.post('/add_video', addVideoController.postAddVideo);
+
 
 // GET: Display the sign-in page
 router.get('/signin', adminAccount.getSignInPage);

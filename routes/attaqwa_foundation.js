@@ -1,7 +1,7 @@
 const index_controller = require("../controllers/index");
 const userAccount = require("../controllers/userAccount");
 const adminAccount = require('../controllers/adminAccount');
-const videoCategoryController = require('../controllers/videoCategoryController');
+const videoCategoryController = require("../controllers/videoCategoryController");
 const questionController = require("../controllers/question");
 const sessionSignOut = require("../controllers/signOut");
 const { validateUserSignUp } = require("../middleware/userValidation");

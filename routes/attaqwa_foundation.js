@@ -6,7 +6,6 @@ const questionController = require("../controllers/question");
 const sessionSignOut = require("../controllers/signOut");
 const { validateUserSignUp } = require("../middleware/userValidation");
 const { validateAdminSignUp } = require("../middleware/adminValidation");
-const getAllQuestion = require("../controllers/question");
 const addVideoController = require("../controllers/addVideo");
 const videoListController = require("../controllers/videoList");
 const isAuthenticated = require("../middleware/userSessionAuth");

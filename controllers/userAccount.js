@@ -113,8 +113,11 @@ exports.getUserMessages = asyncHandler(async (req, res) => {
   const userId = req.session.user?.id; // Retrieve logged-in user's ID
   const messages = await Message.find({ userId }).sort({ createdAt: -1 });
 
+  // Mark all messages as read
+  await Message.updateMany({ userId, isRead: false }, { isRead: true });
+
   res.render('userMessages', {
     title: 'Your Messages',
-    messages
+    messages,
   });
 });

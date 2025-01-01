@@ -2,24 +2,39 @@ const Question = require("../models/question");
 const Message = require("../models/messages");
 const asyncHandler = require("express-async-handler");
 
-// GET: Display the form to ask a question
 exports.getAskQuestion = asyncHandler(async (req, res) => {
-  res.render("askQuestion", { title: "Ask Sheesu" });
+  const success = req.flash('success'); // Explicitly fetch 'success' messages
+  const error = req.flash('error');    // Explicitly fetch 'error' messages
+
+  console.log('Flash Success on GET:', success);
+  console.log('Flash Error on GET:', error);
+
+  res.render("askQuestion", {
+    title: "Ask Sheesu",
+    success,
+    error,
+  });
 });
 
 exports.postAskQuestion = asyncHandler(async (req, res) => {
   const { question } = req.body;
-  const userId = req.session.user?.id; // Retrieve user ID from session
+  const userId = req.session.user?.id;
 
   if (!question) {
-    return res.status(400).render('askQuestion', {
-      title: 'Ask Sheesu',
-      error: 'Please provide a question.',
-    });
+    req.flash('error', 'Please provide a question.');
+    return res.redirect('/attaqwa_foundation/ask_sheesu');
   }
 
-  await Question.create({ userId, question }); // Save question with associated user ID
-  res.redirect('/attaqwa_foundation/ask_sheesu');
+  try {
+    await Question.create({ userId, question });
+    req.flash('success', 'Your question has been submitted successfully!');
+    console.log('Flash Success Set:', req.session.flash);
+    res.redirect('/attaqwa_foundation/ask_sheesu');
+  } catch (err) {
+    req.flash('error', 'Something went wrong while submitting your question.');
+    console.log('Flash Error Set on Exception:', req.session.flash);
+    res.redirect('/attaqwa_foundation/ask_sheesu');
+  }
 });
 
 // GET: Display all questions (Admin view)

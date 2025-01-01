@@ -1,11 +1,18 @@
-extends layout
+extends layout 
 
 block content
   .row.justify-content-center
     .col-md-8
       h2.text-center Ask Sheesu
-      if error
-        .alert.alert-danger= error
+
+      // Display success message
+      if success && success.length > 0
+        .alert.alert-success= success[0]
+
+      // Display error message
+      if error && error.length > 0
+        .alert.alert-danger= error[0]
+
       form(action="/attaqwa_foundation/ask_sheesu" method="POST")
         .form-group
           label(for="question") Your Question

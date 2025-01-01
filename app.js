@@ -8,6 +8,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo'); // Persistent session store
 const mongoose = require('mongoose');
 const flash = require('express-flash'); // Import express-flash
+const Message = require('./models/messages');
 
 const attaqwaRouter = require("./routes/attaqwa_foundation");
 const usersRouter = require('./routes/users');
@@ -18,7 +19,7 @@ const app = express();
 mongoose.set("strictQuery", false);
 const mongoDB = process.env.MONGODB_URI || "your-mongo-uri-here";
 
-mongoose.connect(mongoDB,)
+mongoose.connect(mongoDB)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
@@ -52,13 +53,26 @@ app.use(session({
 // Initialize flash middleware
 app.use(flash());
 
-// Middleware to set local variables to handle dynamic navigational layout
-app.use((req, res, next) => {
+// Middleware to set local variables for dynamic navigation layout (excluding req.flash here)
+app.use(async (req, res, next) => {
   res.locals.isLoggedIn = req.session.isLoggedIn || false;
   res.locals.admin = req.session.admin || null;
-  res.locals.user = req.session.user || null;  // Set user here if regular user is logged in
-  res.locals.success = req.flash('success'); // Add flash success messages
-  res.locals.error = req.flash('error');     // Add flash error messages
+  res.locals.user = req.session.user || null;
+
+  // Check for unread messages if the user is logged in
+  if (req.session.user) {
+    try {
+      const userId = req.session.user.id;
+      const unreadCount = await Message.countDocuments({ userId, isRead: false });
+      res.locals.unreadMessages = unreadCount; // Attach the unread messages count to the view
+    } catch (err) {
+      console.error('Error fetching unread messages:', err);
+      res.locals.unreadMessages = 0; // Fail gracefully
+    }
+  } else {
+    res.locals.unreadMessages = 0; // No messages for guests
+  }
+
   next();
 });
 

@@ -45,6 +45,14 @@ router.post('/create_article', isAdmin, articleController.postCreateArticle); //
 router.get('/article/:id', articleController.getArticle); // View a specific article
 router.get('/all_articles', articleController.getAllArticles); // View all articles
 
+// Fetch and List Articles for Delete
+router.get('/delete_article', articleController.getDeleteArticle);
+router.post('/delete_article', articleController.postDeleteArticle);
+
+// Fetch and List Articles for Edit
+router.get('/edit_article', articleController.getEditArticleList);
+router.post('/edit_article', articleController.getArticleForEdit);
+router.post('/update_article', articleController.postUpdateArticle);
 
 // GET: Render add video form
 router.get('/add_video', addVideoController.getAddVideo);

@@ -12,6 +12,7 @@ const addVideoController = require("../controllers/addVideo");
 const donateController = require('../controllers/donatePage');
 const videoListController = require("../controllers/videoList");
 const articleController = require('../controllers/article');
+const liveClassController = require('../controllers/live_class'); 
 const searchController = require("../controllers/searchController");
 const isAuthenticated = require("../middleware/userSessionAuth");
 const isAdmin = require("../middleware/adminSessionAuth");
@@ -130,5 +131,8 @@ router.post('/delete_question', isAdmin, questionController.postDeleteQuestion);
 
 //Donate Page
 router.get('/donate', donateController.getDonatePage);
+
+// Live Class Route (Restricted to Admins & Students)
+router.get('/live_class', liveClassController.getLiveClass);
 
 module.exports = router;

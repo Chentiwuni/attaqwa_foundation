@@ -1,5 +1,6 @@
 const index_controller = require("../controllers/index");
 const categoryController = require('../controllers/addCategory');
+const sessionController = require('../controllers/class_session');
 const deleteCategoryController = require('../controllers/deleteCategory');
 const deleteVideoController = require('../controllers/deleteVideo');
 const userAccount = require("../controllers/userAccount");
@@ -25,11 +26,36 @@ router.get("/", index_controller.index);
 // GET: Search page with results
 router.get('/search', searchController.search);
 
+// Display registration form
+router.get('/register', isAuthenticated, sessionController.getClassSessionRegistration);
+
+// Handle form submission
+router.post('/register', isAuthenticated, sessionController.postClassSessionRegistration);
+
+// Display pending registrations
+router.get('/registrations/pending', isAdmin, sessionController.getPendingRegistrations);
+
+// Handle code assignment
+router.post('/registrations/pending', isAdmin, sessionController.postPendingRegistrations);
+
+//Display all class sessions
+router.get('/all_class_sessions', isAdmin, sessionController.getAllClassSessions);
+
+//Display specific class session participants
+router.get('/class_session/:id', isAdmin, sessionController.getUsersForClassSession);
+
 //Get: Add video category
 router.get('/add_category', isAdmin, categoryController.getAddCategory);
 
 //Post: Add video category
 router.post('/add_category', isAdmin, categoryController.postAddCategory);
+
+//Get: Add class Session
+router.get('/add_session', isAdmin, sessionController.getAddClassSession);
+
+//Post: Add class session
+router.post('/add_session', isAdmin, sessionController.postAddClassSession);
+
 
 router.get('/video_categories/:id', videoListController.getVideoList);
 

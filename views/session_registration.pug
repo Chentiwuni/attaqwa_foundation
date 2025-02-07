@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h1= title
+
+  // Display success message if it exists
+  if success && success.length > 0
+    .alert.alert-success
+      each msg in success
+        p= msg
+
+  // Display error message if it exists
+  if error && error.length > 0
+    .alert.alert-danger
+      each msg in error
+        p= msg
+
+  form(action='/register' method='POST')
+    .form-group
+      label(for='sessionId') Select Class Session
+      select.form-control(name='sessionId' required)
+        option(value='') Select a session
+        each session in classSessions
+          option(value=session._id)= session.title
+    .form-group
+      label(for='momoReference') MoMo Reference Name
+      input.form-control(type='text' name='momoReference' required)
+    button.btn.btn-primary(type='submit') Register

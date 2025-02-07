@@ -5,8 +5,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    lowercase: true, // Automatically converts the username to lowercase
-    trim: true, // Removes any leading or trailing whitespace
+    lowercase: true,
+    trim: true,
   },
   phoneNumber: {
     type: String,
@@ -16,6 +16,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+});
+
+// Virtual to populate messages
+userSchema.virtual('messages', {
+  ref: 'Message',
+  localField: '_id',
+  foreignField: 'userId',
 });
 
 const User = mongoose.model('User', userSchema);

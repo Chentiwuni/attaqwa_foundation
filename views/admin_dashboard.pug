@@ -44,6 +44,7 @@ block content
                 a(href='/manage_questions', class='nav-link') Answer Questions
               li.list-group-item 
                 a(href='/delete_question', class='nav-link') Delete Question
+
       // Manage Articles Section
       .col-md-4
         .card.mb-4.shadow-sm.border.border-warning
@@ -57,3 +58,17 @@ block content
                 a(href='/delete_article', class='nav-link') Delete article
               li.list-group-item 
                 a(href='/edit_article', class='nav-link') Edit article
+      // Manage Class
+      .col-md-4
+        .card.mb-4.shadow-sm.border.border-warning
+          .card-header.text-center.bg-warning.text-dark
+            h5 Manage Class
+          .card-body
+            ul.list-group.list-group-flush
+              li.list-group-item
+                a(href='/add_session', class='nav-link') Add Class Session
+              li.list-group-item 
+                a(href='/all_class_sessions', class='nav-link') View class sessions
+              li.list-group-item 
+                a(href='/registrations/pending', class='nav-link') Approve Registrations
+

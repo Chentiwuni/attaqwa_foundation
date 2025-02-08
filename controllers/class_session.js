@@ -91,36 +91,40 @@ exports.getClassSessionRegistration = asyncHandler(async (req, res) => {
     });
   });
     
-  // POST: Assign code to user
-  exports.postPendingRegistrations = asyncHandler(async (req, res) => {
-    const { registrationId, code } = req.body;
-  
-    if (!code) {
-      req.flash('error', 'Code is required.');
+// POST: Assign code to user
+exports.postPendingRegistrations = asyncHandler(async (req, res) => {
+  const { registrationId, code } = req.body;
+
+  if (!code) {
+    req.flash('error', 'Code is required.');
+    return res.redirect('/registrations/pending');
+  }
+
+  try {
+    const registration = await Registration.findById(registrationId).populate('userId');
+
+    if (!registration) {
+      req.flash('error', 'Registration not found.');
       return res.redirect('/registrations/pending');
     }
-  
-    try {
-      const registration = await Registration.findById(registrationId).populate('userId');
-  
-      if (!registration) {
-        req.flash('error', 'Registration not found.');
-        return res.redirect('/registrations/pending');
-      }
-  
-      await Message.create({
-        userId: registration.userId._id,
-        question: 'Your class session code is',
-        answer: code,
-      });
-  
-      req.flash('success', 'Code assigned successfully!');
-      res.redirect('/registrations/pending');
-    } catch (err) {
-      req.flash('error', 'Failed to assign code. Please try again later.');
-      res.redirect('/registrations/pending');
-    }
-  });
+
+    await Message.create({
+      userId: registration.userId._id,
+      question: 'Your class session code is',
+      answer: code,
+    });
+
+    // Update the registration to mark the access code as assigned
+    registration.accessCodeAssigned = true;
+    await registration.save();
+
+    req.flash('success', 'Code assigned successfully!');
+    res.redirect('/registrations/pending');
+  } catch (err) {
+    req.flash('error', 'Failed to assign code. Please try again later.');
+    res.redirect('/registrations/pending');
+  }
+});
   
   // GET: Display all class sessions
   exports.getAllClassSessions = asyncHandler(async (req, res) => {

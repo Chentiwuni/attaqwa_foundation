@@ -16,6 +16,10 @@ const registrationSchema = new Schema({
     type: String,
     required: true,
   },
+  accessCodeAssigned: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model('Registration', registrationSchema);

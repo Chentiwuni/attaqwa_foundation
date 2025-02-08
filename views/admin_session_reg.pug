@@ -2,10 +2,10 @@ extends layout
 
 block content
   h1= title
-  if success
+  if success && success.length > 0
     p.alert.alert-success= success
-  if error
-    p.alert.alert-danger= error
+  if error && error.length > 0
+    p.alert.alert-danger= error    
   table.table
     thead
       tr
@@ -22,5 +22,13 @@ block content
           td
             form(action='/registrations/pending' method='POST')
               input(type='hidden' name='registrationId' value=registration._id)
-              input.form-control(type='text' name='code' required)
-              button.btn.btn-primary(type='submit') Assign Code
+              input.form-control(
+                type='text',
+                name='code',
+                required,
+                disabled=registration.accessCodeAssigned
+              )
+              button.btn.btn-primary(
+                type='submit',
+                disabled=registration.accessCodeAssigned
+              ) Assign Code

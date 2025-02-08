@@ -158,7 +158,10 @@ router.post('/delete_question', isAdmin, questionController.postDeleteQuestion);
 //Donate Page
 router.get('/donate', donateController.getDonatePage);
 
-// Live Class Route (Restricted to Admins & Students)
+router.get('/live_class_auth', isAuthenticated, sessionController.getLiveClassAuth);
+
+router.post('/live_class_auth', isAuthenticated, sessionController.postLiveClassAuth);
+
 router.get('/live_class', liveClassController.getLiveClass);
 
 module.exports = router;

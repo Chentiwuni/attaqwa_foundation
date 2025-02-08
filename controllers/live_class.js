@@ -1,14 +1,28 @@
 const asyncHandler = require('express-async-handler');
 
 exports.getLiveClass = asyncHandler(async (req, res) => {
-  // Determine user data based on session
-  let user = null;
+  const { accessCode } = req.session;
 
-  if (req.session.admin) {
-    user = { name: req.session.admin.name, role: "admin" };
-  } else if (req.session.user) {
-    user = { name: req.session.user.name, role: req.session.user.role };
+  if (!accessCode) {
+    req.flash('error', 'Access code is required to join the live class.');
+    return res.redirect('/live_class_auth');
   }
 
-  res.render('live_class', { user });
+  const registration = await Registration.findOne({ accessCode }).populate('classSessionId');
+
+  if (!registration) {
+    req.flash('error', 'Invalid access code.');
+    return res.redirect('/live_class_auth');
+  }
+
+  if (registration.codeExpiration < new Date()) {
+    req.flash('error', 'Access code has expired.');
+    return res.redirect('/live_class_auth');
+  }
+
+  res.render('liveClass', {
+    title: 'Live Class',
+    classSession: registration.classSessionId,
+  });
 });
+

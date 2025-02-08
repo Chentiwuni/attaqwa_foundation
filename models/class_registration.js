@@ -16,9 +16,17 @@ const registrationSchema = new Schema({
     type: String,
     required: true,
   },
+  accessCode: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
   accessCodeAssigned: {
     type: Boolean,
     default: false,
+  },
+  codeExpiration: {
+    type: Date,
   },
 });
 

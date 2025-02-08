@@ -108,15 +108,18 @@ exports.postPendingRegistrations = asyncHandler(async (req, res) => {
       return res.redirect('/registrations/pending');
     }
 
+    // Assign the code and set the expiration date
+    registration.accessCode = code;
+    registration.codeExpiration = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days from now
+    registration.accessCodeAssigned = true;
+    await registration.save();
+
+    // Send the code to the user
     await Message.create({
       userId: registration.userId._id,
       question: 'Your class session code is',
       answer: code,
     });
-
-    // Update the registration to mark the access code as assigned
-    registration.accessCodeAssigned = true;
-    await registration.save();
 
     req.flash('success', 'Code assigned successfully!');
     res.redirect('/registrations/pending');
@@ -165,4 +168,46 @@ exports.getUsersForClassSession = asyncHandler(async (req, res) => {
     success,
     error,
   });
+});
+
+// Display the form for users to submit their access code
+exports.getLiveClassAuth = asyncHandler(async (req, res) => {
+  res.render('codeSubmission', {
+    title: 'Join Live Class',
+    success: req.flash('success'),
+    error: req.flash('error'),
+  });
+});
+
+// Handle the form submission
+exports.postLiveClassAuth = asyncHandler(async (req, res) => {
+  const { code } = req.body;
+
+  if (!code) {
+    req.flash('error', 'Access code is required.');
+    return res.redirect('/live_class_auth');
+  }
+
+  try {
+    const registration = await Registration.findOne({ accessCode: code }).populate('classSessionId');
+
+    if (!registration) {
+      req.flash('error', 'Invalid access code.');
+      return res.redirect('/live_class_auth');
+    }
+
+    if (registration.codeExpiration < new Date()) {
+      req.flash('error', 'Access code has expired.');
+      return res.redirect('/live_class_auth');
+    }
+
+    // Redirect to the live class page or render the live class view
+    res.render('live_class', {
+      title: 'Live Class',
+      classSession: registration.classSessionId,
+    });
+  } catch (err) {
+    req.flash('error', 'An error occurred. Please try again.');
+    res.redirect('/live_class_auth');
+  }
 });

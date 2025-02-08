@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  if success
+    p.alert.alert-success= success
+  if error
+    p.alert.alert-danger= error
+  form(action='/live_class_auth' method='POST')
+    .form-group
+      label(for='code') Enter Access Code:
+      input.form-control(type='text' name='code' required)
+    button.btn.btn-primary(type='submit') Join Live Class

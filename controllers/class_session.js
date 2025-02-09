@@ -182,6 +182,7 @@ exports.getLiveClassAuth = asyncHandler(async (req, res) => {
 // Handle the form submission
 exports.postLiveClassAuth = asyncHandler(async (req, res) => {
   const { code } = req.body;
+  const userId = req.session.user.id; // Assuming req.user contains the authenticated user's information
 
   if (!code) {
     req.flash('error', 'Access code is required.');
@@ -189,7 +190,7 @@ exports.postLiveClassAuth = asyncHandler(async (req, res) => {
   }
 
   try {
-    const registration = await Registration.findOne({ accessCode: code }).populate('classSessionId');
+    const registration = await Registration.findOne({ userId, accessCode: code }).populate('classSessionId');
 
     if (!registration) {
       req.flash('error', 'Invalid access code.');
@@ -201,12 +202,12 @@ exports.postLiveClassAuth = asyncHandler(async (req, res) => {
       return res.redirect('/live_class_auth');
     }
 
+    // Store the access code in the session to authorize the user for the live class
+    req.session.accessCode = code;
+
     // Redirect to the live class page or render the live class view
-    res.render('live_class', {
-      title: 'Live Class',
-      classSession: registration.classSessionId,
-    });
-  } catch (err) {
+    res.redirect('/live_class');
+    } catch (err) {
     req.flash('error', 'An error occurred. Please try again.');
     res.redirect('/live_class_auth');
   }

@@ -162,6 +162,6 @@ router.get('/live_class_auth', isAuthenticated, sessionController.getLiveClassAu
 
 router.post('/live_class_auth', isAuthenticated, sessionController.postLiveClassAuth);
 
-router.get('/live_class', liveClassController.getLiveClass);
+router.get('/live_class', isAuthenticated, liveClassController.getLiveClass);
 
 module.exports = router;

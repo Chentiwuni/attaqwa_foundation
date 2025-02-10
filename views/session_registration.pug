@@ -3,17 +3,22 @@ extends layout
 block content
   h1= title
 
-  // Display success message if it exists
   if success && success.length > 0
     .alert.alert-success
       each msg in success
         p= msg
 
-  // Display error message if it exists
   if error && error.length > 0
     .alert.alert-danger
       each msg in error
         p= msg
+
+  if fee
+    p(style='font-size: 1.2em; font-weight: bold;')
+      | Pay GHC#{fee.amount} via MoMo or bank to acquire an access code. Enter MoMo reference name or bank details in the field below to register. Access code is valid for 30 days.
+  else
+    p(style='font-size: 1.2em; font-weight: bold;')
+      | Pay the registration fee via MoMo or bank to acquire an access code. Enter MoMo reference name or bank details in the field below to register. Access code is valid for 30 days.
 
   form(action='/register' method='POST')
     .form-group

@@ -164,4 +164,7 @@ router.post('/live_class_auth', isAuthenticated, sessionController.postLiveClass
 
 router.get('/live_class', isAuthenticated, liveClassController.getLiveClass);
 
+router.get('/registration_fee', isAdmin, adminAccount.getRegistrationFee);
+router.post('/registration_fee', isAdmin, adminAccount.postRegistrationFee);
+
 module.exports = router;

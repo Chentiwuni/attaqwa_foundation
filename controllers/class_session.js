@@ -1,7 +1,7 @@
 const Registration = require('../models/class_registration');
 const Message = require('../models/messages');
 const ClassSession = require('../models/class_session');
-const User = require('../models/users');
+const RegistrationFee = require('../models/registrationFee');
 const asyncHandler = require('express-async-handler');
 
 // GET: Display form for adding new class session
@@ -40,12 +40,14 @@ exports.getClassSessionRegistration = asyncHandler(async (req, res) => {
   const success = req.flash('success');
   const error = req.flash('error');
   const classSessions = await ClassSession.find();
+  const fee = await RegistrationFee.findOne();
 
   res.render('session_registration', {
     title: 'Register for Class Session',
     classSessions,
     success,
     error,
+    fee,
   });
 });
 

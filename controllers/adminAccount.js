@@ -2,6 +2,7 @@
 const { validationResult } = require('express-validator'); // Import express-validator
 const asyncHandler = require('express-async-handler');
 const Admin = require('../models/admin');
+const RegistrationFee = require('../models/registrationFee');
 const bcrypt = require('bcryptjs');
 
 // GET: Render Sign In Page
@@ -151,4 +152,23 @@ exports.postDeleteAdmin = asyncHandler(async (req, res) => {
 
   req.flash('success', 'Admin deleted successfully.');
   res.redirect('/delete_admin');
+});
+
+exports.getRegistrationFee = asyncHandler(async (req, res) => {
+  const fee = await RegistrationFee.findOne();
+  res.render('admin_registration_fee', { fee });
+});
+
+exports.postRegistrationFee = asyncHandler(async (req, res) => {
+  const { amount } = req.body;
+  let fee = await RegistrationFee.findOne();
+  if (fee) {
+    fee.amount = amount;
+    fee.updatedAt = Date.now();
+  } else {
+    fee = new RegistrationFee({ amount });
+  }
+  await fee.save();
+  req.flash('success', 'Registration fee updated successfully.');
+  res.redirect('registration_fee');
 });

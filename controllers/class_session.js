@@ -67,7 +67,7 @@ exports.getClassSessionRegistration = asyncHandler(async (req, res) => {
         classSessionId: sessionId,
         momoReferenceName: momoReference,
       });
-      req.flash('success', 'Registration successful.');
+      req.flash('success', 'Registration successful, patiently wait for Admin to assign an access code to you, check your attaqwa message box for the code .');
       res.redirect('/register');
     } catch (err) {
       console.error('Registration error:', err);
